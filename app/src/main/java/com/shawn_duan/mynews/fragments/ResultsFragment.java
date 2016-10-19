@@ -31,10 +31,4 @@ public class ResultsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_results, container, false);
         return view;
     }
-
-    @Override
-    public void onResume() {
-
-        super.onResume();
-    }
 }

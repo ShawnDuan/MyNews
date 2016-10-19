@@ -53,7 +53,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Fragment transaction is tricky. If you want to dynamically replace/add fragment, the clean way is to create a container(placeholder) in activity layout, and do fragment transaction replace/add based on the container id.
 
 ## Open-source libraries used
 
