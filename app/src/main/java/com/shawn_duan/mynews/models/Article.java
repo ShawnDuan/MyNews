@@ -1,4 +1,4 @@
-package com.shawn_duan.mynews;
+package com.shawn_duan.mynews.models;
 
 import com.shawn_duan.mynews.responses.MediaMetadatum;
 import com.shawn_duan.mynews.responses.Result;
