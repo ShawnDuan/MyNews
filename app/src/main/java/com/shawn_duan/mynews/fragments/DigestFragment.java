@@ -48,6 +48,8 @@ public class DigestFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mArticleList = new ArrayList<>();
+
         popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
                 .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
                 .observeOn(AndroidSchedulers.mainThread())
@@ -60,10 +62,25 @@ public class DigestFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_digest, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.digest_list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mArticleList = new ArrayList<>();
         mDigestAdapter = new MostViewedAdapter(getActivity(), mArticleList);
         mRecyclerView.setAdapter(mDigestAdapter);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView()");
+        super.onDestroyView();
     }
 
     @Override

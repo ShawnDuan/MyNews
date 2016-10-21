@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isShowingResults;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
+    private ResultsFragment mResultsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +75,13 @@ public class MainActivity extends AppCompatActivity {
                 // do query, show result in resultFragment
 
                 if (!isShowingResults) {
-                    pushFragment(new ResultsFragment(), true);
+                    mResultsFragment = ResultsFragment.newInstance(query);
+                    pushFragment(mResultsFragment, true);
 
                     isShowingResults = true;
                 } else {
                     // refresh resultFragment
+                    mResultsFragment.updateQuery(query);
                 }
                 searchView.clearFocus();
 

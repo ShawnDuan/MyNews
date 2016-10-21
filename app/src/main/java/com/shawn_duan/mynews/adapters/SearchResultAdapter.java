@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.shawn_duan.mynews.models.Article;
 import com.shawn_duan.mynews.R;
+import com.shawn_duan.mynews.models.Article;
 import com.shawn_duan.mynews.models.MediaMetaData;
 import com.squareup.picasso.Picasso;
 
@@ -20,13 +20,13 @@ import java.util.List;
  * Created by sduan on 10/20/16.
  */
 
-public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.ArticleViewHolder> {
-    private final static String TAG = MostViewedAdapter.class.getSimpleName();
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ArticleViewHolder> {
+    private final static String TAG = SearchResultAdapter.class.getSimpleName();
 
     private Activity mActivity;
     private ArrayList<Article> mArticleList;
 
-    public MostViewedAdapter(Activity activity, ArrayList<Article> articles) {
+    public SearchResultAdapter(Activity activity, ArrayList<Article> articles) {
         mActivity = activity;
         mArticleList = articles;
     }
@@ -35,7 +35,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Ar
     public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_in_result, parent, false);
 
-        return new ArticleViewHolder(view);
+        return new SearchResultAdapter.ArticleViewHolder(view);
     }
 
     @Override
@@ -71,3 +71,5 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Ar
         }
     }
 }
+
+

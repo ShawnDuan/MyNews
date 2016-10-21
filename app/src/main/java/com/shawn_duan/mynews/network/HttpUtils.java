@@ -1,7 +1,10 @@
 package com.shawn_duan.mynews.network;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.shawn_duan.mynews.responses.MostViewedResponse;
+import com.shawn_duan.mynews.responses.SearchArticleResponse;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -36,6 +39,7 @@ public class HttpUtils {
     private NytApiEndpoint createService() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(rxAdapter)
                 .build();
@@ -43,7 +47,21 @@ public class HttpUtils {
         return nytApiEndpoint;
     }
 
+    public Observable<SearchArticleResponse> searchArticles(String query, String beginDate, String endDate, String page, String sort) {
+        Observable<SearchArticleResponse> observable = endpoint.searchArticle(apiKey, query, beginDate, endDate, page, sort);
+        return observable;
+    }
+
+    public Observable<SearchArticleResponse> searchArticles(String query) {
+        return searchArticles(query, null, null, null, "newest");
+    }
+
     public Observable<MostViewedResponse> fetchPopularArticles() {
         return endpoint.mostViewed("all-sections", "30", apiKey);
     }
+
+    private OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .addNetworkInterceptor(new StethoInterceptor())
+            .build();
 }
+

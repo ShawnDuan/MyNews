@@ -1,5 +1,6 @@
 package com.shawn_duan.mynews.models;
 
+import com.shawn_duan.mynews.responses.Doc;
 import com.shawn_duan.mynews.responses.MediaMetadatum;
 import com.shawn_duan.mynews.responses.Result;
 
@@ -19,7 +20,7 @@ public class Article {
     private String abstracts;
     private String publishedDate;
 
-    private List<MediaMetadatum> medias;
+    private List<MediaMetaData> medias;
 
     public Article(Result result) {
         url = result.getUrl();
@@ -29,7 +30,16 @@ public class Article {
         title = result.getTitle();
         abstracts = result.getAbstract();
         publishedDate = result.getPublishedDate();
-        medias = result.getMedia().get(0).getMediaMetadata();
+        medias = MediaMetaData.fromMediaMetadatumList(result.getMedia().get(0).getMediaMetadata());
+    }
+
+    public Article(Doc doc) {
+        url = doc.getWebUrl();
+        section = doc.getSectionName();
+        title = doc.getHeadline().getMain();
+        abstracts = doc.getSnippet();
+        publishedDate = doc.getPubDate().substring(0, 10);      // FIXME: need better way parse date.
+        medias = MediaMetaData.fromMultimediumList(doc.getMultimedia());
     }
 
     public static ArrayList<Article> fromResultList(List<Result> resultList) {
@@ -39,6 +49,16 @@ public class Article {
         }
         return results;
     }
+
+    public static ArrayList<Article> fromDocList(List<Doc> docList) {
+        ArrayList<Article> results = new ArrayList<>();
+        for (int i = 0; i < docList.size(); i++) {
+            results.add(new Article(docList.get(i)));
+        }
+        return results;
+    }
+
+
 
     public String getUrl() {
         return url;
@@ -96,12 +116,11 @@ public class Article {
         this.publishedDate = publishedDate;
     }
 
-    public List<MediaMetadatum> getMedias() {
+    public List<MediaMetaData> getMedias() {
         return medias;
     }
 
-    public void setMedias(List<MediaMetadatum> medias) {
+    public void setMedias(List<MediaMetaData> medias) {
         this.medias = medias;
     }
-
 }
