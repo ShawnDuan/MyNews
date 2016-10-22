@@ -50,10 +50,10 @@ public class DigestFragment extends Fragment {
 
         mArticleList = new ArrayList<>();
 
-        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
-                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MostViewedResponseSubscriber());
+//        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
+//                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new MostViewedResponseSubscriber());
     }
 
     @Nullable
@@ -75,6 +75,10 @@ public class DigestFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
+                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MostViewedResponseSubscriber());
     }
 
     @Override

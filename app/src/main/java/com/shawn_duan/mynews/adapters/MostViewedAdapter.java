@@ -41,15 +41,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Ar
     @Override
     public void onBindViewHolder(ArticleViewHolder holder, int position) {
         Article article = mArticleList.get(position);
-        holder.title.setText(article.getTitle());
-        holder.date.setText(article.getPublishedDate());
-        List<MediaMetaData> mediaMetaDataList = article.getMedias();
-        if (mediaMetaDataList != null && mediaMetaDataList.size() > 0) {
-            String url = article.getMedias().get(0).getUrl();
-            Picasso.with(mActivity).load(url).into(holder.thumbnail);
-        } else {
-            holder.thumbnail.setVisibility(View.GONE);
-        }
+        holder.updateInfo(article);
     }
 
     @Override
@@ -58,16 +50,10 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Ar
     }
 
 
-    public class ArticleViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        ImageView thumbnail;
-        TextView date;
+    public class ArticleViewHolder extends BaseViewHolder {
 
         public ArticleViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.tvTitle);
-            thumbnail = (ImageView) itemView.findViewById(R.id.ivThumbnail);
-            date = (TextView) itemView.findViewById(R.id.tvDate);
+            super(mActivity, itemView);
         }
     }
 }
