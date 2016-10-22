@@ -47,13 +47,7 @@ public class DigestFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mArticleList = new ArrayList<>();
-
-//        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
-//                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new MostViewedResponseSubscriber());
     }
 
     @Nullable
@@ -75,10 +69,7 @@ public class DigestFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
-                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MostViewedResponseSubscriber());
+        subscribeQuery();
     }
 
     @Override
@@ -102,7 +93,7 @@ public class DigestFragment extends Fragment {
         @Override
         public void onError(Throwable e) {
             if (e instanceof HttpException) {
-                HttpException response = (HttpException)e;
+                HttpException response = (HttpException) e;
                 int code = response.code();
                 Log.d(TAG, "Rx Subscriber error with code: " + code);
             }
@@ -116,5 +107,12 @@ public class DigestFragment extends Fragment {
             mArticleList.addAll(Article.fromResultList(results));
             mDigestAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void subscribeQuery() {
+        popularArticleSubscription = HttpUtils.newInstance().fetchPopularArticles()
+                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MostViewedResponseSubscriber());
     }
 }

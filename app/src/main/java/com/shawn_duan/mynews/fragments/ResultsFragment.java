@@ -56,12 +56,10 @@ public class ResultsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mArticleList = new ArrayList<>();
         if (getArguments() != null) {
             mQueryString = getArguments().getString("query");
         }
-        subscribeQuery();
     }
 
     @Nullable
@@ -73,6 +71,12 @@ public class ResultsFragment extends Fragment {
         mResultAdapter = new SearchResultAdapter(getActivity(), mArticleList);
         mRecyclerView.setAdapter(mResultAdapter);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        subscribeQuery();
     }
 
     @Override

@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private FragmentManager mFragmentManager = getSupportFragmentManager();
     private ResultsFragment mResultsFragment;
 
+    private MenuItem mSearchItem, mSettingItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,18 +43,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {     // todo refactor this method
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        mSettingItem = menu.findItem(R.id.action_settings);
+        mSearchItem = menu.findItem(R.id.action_search);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+        mSettingItem.setVisible(false);
+        setSearchMenuItem();
+        return true;
+    }
+
+    private void setSearchMenuItem() {
+        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                Toast.makeText(MainActivity.this, "search action expand.", Toast.LENGTH_LONG);
+                mSettingItem.setVisible(true);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 // back button pressed, back arrow clicked, should go back to main browsing mode.
+                mSettingItem.setVisible(false);
                 if (isShowingResults) {
                     Log.d(TAG, "fragment # : " + mFragmentManager.getFragments().size());
                     onBackPressed();
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
         // Customize searchview text and hint colors
         int searchEditId = android.support.v7.appcompat.R.id.search_src_text;
         EditText et = (EditText) searchView.findViewById(searchEditId);
@@ -73,19 +83,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // do query, show result in resultFragment
-
                 if (!isShowingResults) {
+                    isShowingResults = true;
                     mResultsFragment = ResultsFragment.newInstance(query);
                     pushFragment(mResultsFragment, true);
-
-                    isShowingResults = true;
                 } else {
                     // refresh resultFragment
                     mResultsFragment.updateQuery(query);
                 }
                 searchView.clearFocus();
-
-
                 return true;
             }
 
@@ -94,18 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_search) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void pushFragment(Fragment frag, boolean addToBackStack) {
