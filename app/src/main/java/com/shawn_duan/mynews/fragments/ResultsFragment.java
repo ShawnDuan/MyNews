@@ -78,6 +78,7 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     @Override
     public void onResume() {
         super.onResume();
+        mRecyclerView.requestFocus();
         subscribeQuery();
     }
 
