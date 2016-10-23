@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.shawn_duan.mynews.fragments.DigestFragment;
 import com.shawn_duan.mynews.R;
+import com.shawn_duan.mynews.fragments.FilterDialogFragment;
 import com.shawn_duan.mynews.fragments.ResultsFragment;
+import com.shawn_duan.mynews.models.FilterSettings;
 
 public class MainActivity extends AppCompatActivity {
     private final static String TAG = MainActivity.class.getSimpleName();
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isShowingResults;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
-    private ResultsFragment mResultsFragment;
+    public ResultsFragment mResultsFragment;
 
     private MenuItem mSearchItem, mSettingItem;
 
@@ -37,6 +39,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         pushFragment(new DigestFragment(), false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            showSettingsDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -55,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                mSettingItem.setVisible(true);
+                // mSettingItem.setVisible(true);
                 return true;
             }
 
@@ -87,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     isShowingResults = true;
                     mResultsFragment = ResultsFragment.newInstance(query);
                     pushFragment(mResultsFragment, true);
+                    mSettingItem.setVisible(true);
                 } else {
                     // refresh resultFragment
                     mResultsFragment.updateQuery(query);
@@ -114,5 +127,11 @@ public class MainActivity extends AppCompatActivity {
         if (mFragmentManager.getFragments() != null) {
             Log.d(TAG, "fragment # : " + mFragmentManager.getFragments().size());
         }
+    }
+
+    private void showSettingsDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        FilterDialogFragment settingsDialogFragment = FilterDialogFragment.newInstance(mResultsFragment.getmFilterSettings());
+        settingsDialogFragment.show(fm, "fragment_settings_name");
     }
 }

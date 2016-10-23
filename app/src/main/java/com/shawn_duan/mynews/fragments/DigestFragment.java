@@ -80,7 +80,9 @@ public class DigestFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        popularArticleSubscription.unsubscribe();
+        if (!popularArticleSubscription.isUnsubscribed()) {
+            popularArticleSubscription.unsubscribe();
+        }
         super.onDestroy();
     }
 

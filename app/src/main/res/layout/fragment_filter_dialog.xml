@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="Begin Date"
+        android:textAppearance="?android:attr/textAppearanceSearchResultTitle"
+        android:textColor="@color/colorPrimaryLight"/>
+
+    <TextView
+        android:id="@+id/tvBeginDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView1"
+        android:layout_marginBottom="10dp"
+        android:paddingLeft="5dp"
+        android:text="Select date"
+        android:textColor="@color/black"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvBeginDate"
+        android:layout_marginBottom="10dp"
+        android:text="Sort by"
+        android:textAppearance="?android:attr/textAppearanceSearchResultTitle"
+        android:textColor="@color/colorPrimaryLight"/>
+
+    <Spinner
+        android:id="@+id/spSort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_marginBottom="10dp"
+        android:entries="@array/sort_array"
+        android:gravity="center_horizontal"
+        android:spinnerMode="dropdown"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spSort"
+        android:layout_marginBottom="10dp"
+        android:text="News desk values"
+        android:textAppearance="?android:attr/textAppearanceSearchResultTitle"
+        android:textColor="@color/colorPrimaryLight"/>
+
+    <CheckBox
+        android:id="@+id/cbArt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:checked="false"
+        android:text="arts"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <CheckBox
+        android:id="@+id/cbFashion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cbArt"
+        android:checked="false"
+        android:text="Fashion and Style"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <CheckBox
+        android:id="@+id/cbSports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cbFashion"
+        android:checked="false"
+        android:text="Sports"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <Button
+        android:id="@+id/btSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cbSports"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="Save"
+        android:background="@color/colorPrimaryLight"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>

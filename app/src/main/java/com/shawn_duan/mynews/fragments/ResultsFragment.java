@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.shawn_duan.mynews.R;
 import com.shawn_duan.mynews.adapters.SearchResultAdapter;
 import com.shawn_duan.mynews.models.Article;
+import com.shawn_duan.mynews.models.FilterSettings;
 import com.shawn_duan.mynews.network.HttpUtils;
 import com.shawn_duan.mynews.responses.Doc;
 import com.shawn_duan.mynews.responses.SearchArticleResponse;
@@ -31,7 +32,7 @@ import rx.schedulers.Schedulers;
  * Created by sduan on 10/18/16.
  */
 
-public class ResultsFragment extends Fragment {
+public class ResultsFragment extends Fragment implements FilterDialogFragment.FilterDialogListener{
     private final static String TAG = ResultsFragment.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
@@ -39,6 +40,7 @@ public class ResultsFragment extends Fragment {
     private ArrayList<Article> mArticleList;
     private String mQueryString;
 
+    private FilterSettings mFilterSettings;
     private Subscription searchArticleSubscription;
 
     public ResultsFragment() {
@@ -85,6 +87,13 @@ public class ResultsFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    public void onFinishFilterDialog(FilterSettings filterSettings) {
+        mFilterSettings = filterSettings;
+        updateFilterSettings();
+        mRecyclerView.requestFocus();
+    }
+
     private class SearchArticleResponseSubscriber extends Subscriber<SearchArticleResponse> {
         @Override
         public void onCompleted() {
@@ -112,15 +121,34 @@ public class ResultsFragment extends Fragment {
         }
     }
 
+    public FilterSettings getmFilterSettings() {
+        return mFilterSettings;
+    }
+
+    public void setmFilterSettings(FilterSettings mFilterSettings) {
+        this.mFilterSettings = mFilterSettings;
+    }
+
     public void updateQuery(String query) {
         mQueryString = query;
         subscribeQuery();
     }
 
+    public void updateFilterSettings() {
+        subscribeQuery();
+    }
+
     private void subscribeQuery() {
-        searchArticleSubscription = HttpUtils.newInstance().searchArticles(mQueryString)
-                .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SearchArticleResponseSubscriber());
+        if (mFilterSettings == null) {
+            searchArticleSubscription = HttpUtils.newInstance().searchArticles(mQueryString)
+                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SearchArticleResponseSubscriber());
+        } else {
+            searchArticleSubscription = HttpUtils.newInstance().searchArticles(mQueryString, mFilterSettings.getBeginDate(), null, null, mFilterSettings.getSortOrder())
+                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SearchArticleResponseSubscriber());
+        }
     }
 }
