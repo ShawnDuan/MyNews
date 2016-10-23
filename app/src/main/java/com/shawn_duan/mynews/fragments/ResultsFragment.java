@@ -83,7 +83,9 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
 
     @Override
     public void onDestroy() {
-        searchArticleSubscription.unsubscribe();
+        if (searchArticleSubscription != null || !searchArticleSubscription.isUnsubscribed()) {
+            searchArticleSubscription.unsubscribe();
+        }
         super.onDestroy();
     }
 
@@ -139,13 +141,18 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     }
 
     private void subscribeQuery() {
+        if (searchArticleSubscription != null && !searchArticleSubscription.isUnsubscribed()) {
+            searchArticleSubscription.unsubscribe();
+        }
         if (mFilterSettings == null) {
-            searchArticleSubscription = HttpUtils.newInstance().searchArticles(mQueryString)
+            searchArticleSubscription = HttpUtils.newInstance()
+                    .searchArticles(mQueryString)
                     .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SearchArticleResponseSubscriber());
         } else {
-            searchArticleSubscription = HttpUtils.newInstance().searchArticles(mQueryString, mFilterSettings.getBeginDate(), null, null, mFilterSettings.getSortOrder())
+            searchArticleSubscription = HttpUtils.newInstance()
+                    .searchArticles(mQueryString, mFilterSettings.getBeginDate(), null, null, mFilterSettings.getSortOrder(), mFilterSettings.getNewsDeskString())
                     .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new SearchArticleResponseSubscriber());

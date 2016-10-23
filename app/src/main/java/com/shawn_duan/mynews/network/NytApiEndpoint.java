@@ -20,7 +20,8 @@ public interface NytApiEndpoint {
                                                     @Query("begin_date") String beginDate,
                                                     @Query("end_date") String endDate,
                                                     @Query("page") String page,
-                                                    @Query("sort") String sort);
+                                                    @Query("sort") String sort,
+                                                    @Query("fq") String filterQuery);
 
     @GET("mostpopular/v2/mostviewed/{section}/{time-period}.json")
     Observable<MostViewedResponse> mostViewed(@Path("section") String section,

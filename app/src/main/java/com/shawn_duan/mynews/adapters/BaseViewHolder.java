@@ -58,6 +58,7 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
         List<MediaMetaData> mediaMetaDataList = article.getMedias();
         if (mediaMetaDataList != null && mediaMetaDataList.size() > 0) {
+            thumbnail.setVisibility(View.VISIBLE);
             String url = article.getMedias().get(0).getUrl();
             Picasso.with(mActivity).load(url).into(thumbnail);
         } else {

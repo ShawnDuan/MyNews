@@ -56,6 +56,21 @@ public class FilterSettings implements Parcelable {
         this.newsDeskValues = newsDeskValues;
     }
 
+    public String getNewsDeskString() {
+        if (newsDeskValues == null || newsDeskValues.size() == 0) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("news_desk:(");
+        for (String value : newsDeskValues) {
+            stringBuilder.append("\"");
+            stringBuilder.append(value);
+            stringBuilder.append("\" ");
+        }
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
+
     @Override
     public int describeContents() {
         return 0;

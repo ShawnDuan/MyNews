@@ -80,7 +80,7 @@ public class DigestFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        if (!popularArticleSubscription.isUnsubscribed()) {
+        if (popularArticleSubscription != null && !popularArticleSubscription.isUnsubscribed()) {
             popularArticleSubscription.unsubscribe();
         }
         super.onDestroy();
@@ -99,7 +99,6 @@ public class DigestFragment extends Fragment {
                 int code = response.code();
                 Log.d(TAG, "Rx Subscriber error with code: " + code);
             }
-
         }
 
         @Override

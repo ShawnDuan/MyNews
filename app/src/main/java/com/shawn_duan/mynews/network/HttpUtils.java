@@ -47,13 +47,13 @@ public class HttpUtils {
         return nytApiEndpoint;
     }
 
-    public Observable<SearchArticleResponse> searchArticles(String query, String beginDate, String endDate, String page, String sort) {
-        Observable<SearchArticleResponse> observable = endpoint.searchArticle(apiKey, query, beginDate, endDate, page, sort);
+    public Observable<SearchArticleResponse> searchArticles(String query, String beginDate, String endDate, String page, String sort, String filterQuery) {
+        Observable<SearchArticleResponse> observable = endpoint.searchArticle(apiKey, query, beginDate, endDate, page, sort, filterQuery);
         return observable;
     }
 
     public Observable<SearchArticleResponse> searchArticles(String query) {
-        return searchArticles(query, null, null, null, "newest");
+        return searchArticles(query, null, null, null, "newest", null);
     }
 
     public Observable<MostViewedResponse> fetchPopularArticles() {

@@ -26,7 +26,7 @@ public class MediaMetaData {
     public MediaMetaData(Multimedium multimedium) {
         width = multimedium.getWidth();
         height = multimedium.getHeight();
-        url = multimedium.getUrl();
+        url = "http://graphics8.nytimes.com/" + multimedium.getUrl();
         imageType = multimedium.getType();
     }
 
