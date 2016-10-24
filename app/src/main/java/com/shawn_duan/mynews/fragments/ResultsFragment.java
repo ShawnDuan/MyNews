@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shawn_duan.mynews.EndlessRecyclerViewScrollListener;
 import com.shawn_duan.mynews.R;
 import com.shawn_duan.mynews.adapters.SearchResultAdapter;
 import com.shawn_duan.mynews.models.Article;
@@ -43,6 +44,8 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     private FilterSettings mFilterSettings;
     private Subscription searchArticleSubscription;
 
+    private EndlessRecyclerViewScrollListener mScrollListener;
+
     public ResultsFragment() {
 
     }
@@ -68,10 +71,23 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_results, container, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.result_list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mResultAdapter = new SearchResultAdapter(getActivity(), mArticleList);
         mRecyclerView.setAdapter(mResultAdapter);
+
+        mScrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        mRecyclerView.addOnScrollListener(mScrollListener);
+
         return view;
     }
 
@@ -79,7 +95,7 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     public void onResume() {
         super.onResume();
         mRecyclerView.requestFocus();
-        subscribeQuery();
+        subscribeQuery(0, true);
     }
 
     @Override
@@ -97,7 +113,55 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
         mRecyclerView.requestFocus();
     }
 
+
+
+    public FilterSettings getmFilterSettings() {
+        return mFilterSettings;
+    }
+
+    public void setmFilterSettings(FilterSettings mFilterSettings) {
+        this.mFilterSettings = mFilterSettings;
+    }
+
+    public void updateQuery(String query) {
+        mQueryString = query;
+        subscribeQuery(0, true);
+    }
+
+    public void updateFilterSettings() {
+        subscribeQuery(0, true);
+    }
+
+    private void subscribeQuery(int pageIndex, boolean clearOldContent) {
+        if (searchArticleSubscription != null && !searchArticleSubscription.isUnsubscribed()) {
+            searchArticleSubscription.unsubscribe();
+        }
+        if (mFilterSettings == null) {
+            searchArticleSubscription = HttpUtils.newInstance()
+                    .searchArticles(mQueryString, String.valueOf(pageIndex))
+                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SearchArticleResponseSubscriber(clearOldContent));
+        } else {
+            searchArticleSubscription = HttpUtils.newInstance()
+                    .searchArticles(mQueryString, mFilterSettings.getBeginDate(), null, String.valueOf(pageIndex), mFilterSettings.getSortOrder(), mFilterSettings.getNewsDeskString())
+                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SearchArticleResponseSubscriber(clearOldContent));
+        }
+    }
+
+    public void loadNextDataFromApi(int offset) {
+        subscribeQuery(offset, false);       // FIXME: 10/23/16 add content of next page
+    }
+
     private class SearchArticleResponseSubscriber extends Subscriber<SearchArticleResponse> {
+        private boolean clearOldList;
+
+        public SearchArticleResponseSubscriber(boolean clearOldList) {
+            this.clearOldList = clearOldList;
+        }
+
         @Override
         public void onCompleted() {
 
@@ -118,45 +182,11 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
         @Override
         public void onNext(SearchArticleResponse response) {
             List<Doc> results = response.getResponse().getDocs();
-            mArticleList.clear();
+            if (clearOldList) {
+                mArticleList.clear();
+            }
             mArticleList.addAll(Article.fromDocList(results));
             mResultAdapter.notifyDataSetChanged();
-        }
-    }
-
-    public FilterSettings getmFilterSettings() {
-        return mFilterSettings;
-    }
-
-    public void setmFilterSettings(FilterSettings mFilterSettings) {
-        this.mFilterSettings = mFilterSettings;
-    }
-
-    public void updateQuery(String query) {
-        mQueryString = query;
-        subscribeQuery();
-    }
-
-    public void updateFilterSettings() {
-        subscribeQuery();
-    }
-
-    private void subscribeQuery() {
-        if (searchArticleSubscription != null && !searchArticleSubscription.isUnsubscribed()) {
-            searchArticleSubscription.unsubscribe();
-        }
-        if (mFilterSettings == null) {
-            searchArticleSubscription = HttpUtils.newInstance()
-                    .searchArticles(mQueryString)
-                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SearchArticleResponseSubscriber());
-        } else {
-            searchArticleSubscription = HttpUtils.newInstance()
-                    .searchArticles(mQueryString, mFilterSettings.getBeginDate(), null, null, mFilterSettings.getSortOrder(), mFilterSettings.getNewsDeskString())
-                    .subscribeOn(Schedulers.io()) // optional if you do not wish to override the default behavior
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new SearchArticleResponseSubscriber());
         }
     }
 }

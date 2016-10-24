@@ -52,8 +52,8 @@ public class HttpUtils {
         return observable;
     }
 
-    public Observable<SearchArticleResponse> searchArticles(String query) {
-        return searchArticles(query, null, null, null, "newest", null);
+    public Observable<SearchArticleResponse> searchArticles(String query, String page) {
+        return searchArticles(query, null, null, page, "newest", null);
     }
 
     public Observable<MostViewedResponse> fetchPopularArticles() {
