@@ -33,7 +33,7 @@ public class MostViewedAdapter extends RecyclerView.Adapter<MostViewedAdapter.Ar
 
     @Override
     public ArticleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_in_result, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_in_digest, parent, false);
 
         return new ArticleViewHolder(view);
     }

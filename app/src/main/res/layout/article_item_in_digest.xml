@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/bg_rectangle_with_shadow"
                 android:padding="10dp">
 
     <ImageView
         android:id="@+id/ivThumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         tools:src="@mipmap/ic_launcher"/>
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/ivThumbnail"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tvDate"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/ivThumbnail"
         android:ellipsize="end"
+        android:maxLines="3"
         android:textAppearance="?attr/textAppearanceSearchResultTitle"
         tools:text="sample title"/>
 
@@ -30,7 +32,10 @@
         android:id="@+id/tvDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitle"
+        android:layout_alignBottom="@+id/ivThumbnail"
+        android:layout_alignLeft="@+id/tvTitle"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tvTitle"
         android:maxLines="1"
         tools:text="12-16-1989"/>
 </RelativeLayout>
