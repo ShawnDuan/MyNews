@@ -75,9 +75,6 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.result_list);
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        mResultAdapter = new SearchResultAdapter(getActivity(), mArticleList);
-        mRecyclerView.setAdapter(mResultAdapter);
-
         mScrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -88,6 +85,11 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
         };
         // Adds the scroll listener to RecyclerView
         mRecyclerView.addOnScrollListener(mScrollListener);
+
+        mResultAdapter = new SearchResultAdapter(getActivity(), mArticleList);
+        mRecyclerView.setAdapter(mResultAdapter);
+
+
 
         return view;
     }
@@ -113,8 +115,6 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
         updateFilterSettings();
         mRecyclerView.requestFocus();
     }
-
-
 
     public FilterSettings getmFilterSettings() {
         return mFilterSettings;
@@ -153,7 +153,8 @@ public class ResultsFragment extends Fragment implements FilterDialogFragment.Fi
     }
 
     public void loadNextDataFromApi(int offset) {
-        subscribeQuery(offset, false);       // FIXME: 10/23/16 add content of next page
+        Log.d(TAG, "loadNextDateFromApi, offset: " + offset);
+        subscribeQuery(offset, false);
     }
 
     private class SearchArticleResponseSubscriber extends Subscriber<SearchArticleResponse> {
