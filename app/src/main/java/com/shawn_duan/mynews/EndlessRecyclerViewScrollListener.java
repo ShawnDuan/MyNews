@@ -31,7 +31,7 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 
     public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
+        visibleThreshold = visibleThreshold * layoutManager.getSpanCount() - 1;
     }
 
     public int getLastVisibleItem(int[] lastVisibleItemPositions) {
